@@ -1,4 +1,5 @@
-  
+
+
 '''Audio and video player with simple GUI controls.
 '''
   
@@ -127,7 +128,7 @@ class PlayerWindow(pyglet.window.Window):
         self.player = player
         self.player.push_handlers(self)
   #      self.player.eos_action = self.player.EOS_PAUSE
-        self.player.eos_action = 'pause'
+  #      self.player.eos_action = 'pause'
   
         self.slider = Slider(self)
         self.slider.x = self.GUI_PADDING
@@ -150,29 +151,39 @@ class PlayerWindow(pyglet.window.Window):
         self.window_button.y = self.GUI_PADDING
         self.window_button.height = self.GUI_BUTTON_HEIGHT
         self.window_button.width = 90
-        self.window_button.text = 'Windowed'
-        self.window_button.on_press = lambda: win.set_fullscreen(False)
+        self.window_button.text = 'Full Screen'
+        self.window_button.on_press = lambda: win.set_fullscreen(not win.fullscreen)
+  
+        # some button
+        self.button = TextButton(self)
+        self.button.x = self.window_button.x + self.window_button.width +self.GUI_PADDING
+        self.button.y = self.GUI_PADDING
+        self.button.height = self.GUI_BUTTON_HEIGHT
+        self.button.width = 45
+        self.button.text = 'click'
+        self.button.on_press = self.on_print
   
         self.controls = [
             self.slider, 
             self.play_pause_button,
             self.window_button,
+            self.button
         ]
   
-        x = self.window_button.x + self.window_button.width + self.GUI_PADDING
-        i = 0
-        for screen in self.display.get_screens():
-            screen_button = TextButton(self)
-            screen_button.x = x
-            screen_button.y = self.GUI_PADDING
-            screen_button.height = self.GUI_BUTTON_HEIGHT
-            screen_button.width = 80
-            screen_button.text = 'Screen %d' % (i + 1)
-            screen_button.on_press = \
-                (lambda s: lambda: win.set_fullscreen(True, screen=s))(screen)
-            self.controls.append(screen_button)
-            i += 1
-            x += screen_button.width + self.GUI_PADDING
+   #     x = self.window_button.x + self.window_button.width + self.GUI_PADDING
+   #     i = 0
+   #     for screen in self.display.get_screens():
+   #         screen_button = TextButton(self)
+   #         screen_button.x = x
+   #         screen_button.y = self.GUI_PADDING
+   #         screen_button.height = self.GUI_BUTTON_HEIGHT
+   #         screen_button.width = 80
+   #         screen_button.text = 'Screen %d' % (i + 1)
+   #         screen_button.on_press = \
+   #             (lambda s: lambda: win.set_fullscreen(True, screen=s))(screen)
+   #         self.controls.append(screen_button)
+   #         i += 1
+   #         x += screen_button.width + self.GUI_PADDING
   
   
     def on_eos(self):
@@ -261,6 +272,10 @@ class PlayerWindow(pyglet.window.Window):
                 self.player.seek(0)
             self.player.play()
         self.gui_update_state()
+    
+    # some option here 
+    def on_print(self):
+        print('1')
   
     def on_draw(self):
         self.clear()
